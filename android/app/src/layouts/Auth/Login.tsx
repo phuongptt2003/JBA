@@ -3,13 +3,13 @@ import React from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View, StyleSheet, Linking, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ButtonSubmit } from "../components/ui/button";
-import { isValidEmail } from "../utils/validation";
-import { RootStackParamList } from "../navigation/types";
-import { Input } from "../components/ui/input";
-import { loginUser } from "../api/UserApi";
+import { ButtonSubmit } from "../../components/ui/button";
+import { isValidEmail } from "../../utils/validation";
+import { RootStackParamList } from "../../navigation/types";
+import { Input } from "../../components/ui/input";
+import { loginUser } from "../../api/UserApi";
 import { useDispatch } from "react-redux";
-import { login } from "../store/slices/userSlice";
+import { login } from "../../store/slices/userSlice";
 
 export function LoginScreen(): React.JSX.Element {
   const [email, setEmail] = React.useState('');
@@ -48,9 +48,9 @@ export function LoginScreen(): React.JSX.Element {
         return;
       }
 
-      dispatch(login(user)); 
+      dispatch(login(user));
       Alert.alert('Success', 'Login successful');
-      navigation.navigate('Home', { email }); 
+      navigation.navigate('Home', { email });
     } catch (error) {
       Alert.alert('Error', 'Something went wrong');
       console.error(error);

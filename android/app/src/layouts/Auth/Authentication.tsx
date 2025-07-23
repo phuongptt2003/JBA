@@ -2,12 +2,12 @@
 import React, { useState } from 'react'
 import { Alert, Button, Text, View } from 'react-native';
 import { StyleSheet } from 'react-native';
-import { Input } from '../components/ui/input';
-import ButtonSubmit from '../components/ui/button';
-import { isValidEmail } from '../utils/validation';
+import { Input } from '../../components/ui/input';
+import ButtonSubmit from '../../components/ui/button';
+import { isValidEmail } from '../../utils/validation';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/types';
+import { RootStackParamList } from '../../navigation/types';
 
 
 type PropsVerifyOTP = NativeStackScreenProps<RootStackParamList, 'VerifyOTP'>;

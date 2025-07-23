@@ -17,12 +17,13 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { LoginScreen } from './android/app/src/layouts/Login';
+import { LoginScreen } from './android/app/src/layouts/Auth/Login';
 import HomeScreen from './android/app/src/layouts/Home';
-import Register from './android/app/src/layouts/Register';
-import {ForgotPassword, ResetPasswordScreen, VerifyOTP } from './android/app/src/layouts/Authentication';
+import Register from './android/app/src/layouts/Auth/Register';
+import {ForgotPassword, ResetPasswordScreen, VerifyOTP } from './android/app/src/layouts/Auth/Authentication';
 import { Provider } from 'react-redux';
 import store from './android/app/src/store/store';
+import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 
 const Stack = createNativeStackNavigator();
 

@@ -2,11 +2,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Input } from '../components/ui/input';
-import ButtonSubmit from '../components/ui/button';
-import { isValidEmail, isValidVietnamesePhone } from '../utils/validation';
-import { RootStackParamList } from '../navigation/types';
-import { User } from '../models/User';
+import { Input } from '../../components/ui/input';
+import ButtonSubmit from '../../components/ui/button';
+import { isValidEmail, isValidVietnamesePhone } from '../../utils/validation';
+import { RootStackParamList } from '../../navigation/types';
+import { User } from '../../models/User';
 
 const RegisterScreen: React.FC = () => {
     const [user, setUser] = React.useState<User>({
@@ -54,7 +54,7 @@ const RegisterScreen: React.FC = () => {
             return;
         }
         Alert.alert('Thành công', 'Đăng ký thành công');
-        navigation.navigate('Home');
+        navigation.navigate('Home', { email: user.Email });
     }
     return (
         <View style={styles.container}>
