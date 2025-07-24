@@ -17,13 +17,15 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { LoginScreen } from './android/app/src/layouts/Auth/Login';
-import HomeScreen from './android/app/src/layouts/Home';
-import Register from './android/app/src/layouts/Auth/Register';
-import {ForgotPassword, ResetPasswordScreen, VerifyOTP } from './android/app/src/layouts/Auth/Authentication';
 import { Provider } from 'react-redux';
-import store from './android/app/src/store/store';
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import { LoginScreen } from './src/screens/Auth/Login';
+import HomeScreen from './src/screens/Home';
+import Register from './src/screens/Auth/Register';
+import ForgotPassword, { ResetPasswordScreen, VerifyOTP } from './src/screens/Auth/Authentication';
+import store from './src/store/store';
+import { LanguageProvider } from './src/contexts/language-context';
+import DetailReport from './src/screens/History/DetailReport';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +38,8 @@ function RootStack() {
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+      <Stack.Screen name="ChangePassword" component={ResetPasswordScreen} />
+      <Stack.Screen name="DetailReport" component={DetailReport} />
     </Stack.Navigator>
   );
 }
@@ -49,11 +53,12 @@ function App(): React.JSX.Element {
 
   return (
     <Provider store={store}>
-    <NavigationContainer>
-        <RootStack />
-      </NavigationContainer>
+      <LanguageProvider>
+        <NavigationContainer>
+          <RootStack />
+        </NavigationContainer>
+      </LanguageProvider>
     </Provider>
-    /* // <LoginCreen /> */
   );
 }
 
