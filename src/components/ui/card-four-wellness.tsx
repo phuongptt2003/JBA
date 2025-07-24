@@ -1,6 +1,6 @@
 
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import { WellnessDay } from "../../models/wellness";
 
 type CardFourWellnessProps = {
@@ -8,6 +8,7 @@ type CardFourWellnessProps = {
 };
 
 const CardFourWellness: React.FC<CardFourWellnessProps> = ({ wellnessDay }) => {
+        
     return (
         <View style={styles.cardContainer}>
             {/* Breathing Rate */}
@@ -63,7 +64,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "space-between",
-        width: "90%",
     },
     card: {
         width: "48%",

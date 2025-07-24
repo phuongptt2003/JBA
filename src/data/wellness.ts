@@ -2,6 +2,8 @@ import { WellnessDay } from "../models/wellness";
 
 export const wellnessDays: WellnessDay[] = [
     {
+        id: '1',
+        score: '8',
         date: '2025-07-27',
         timeStamp: '2025-07-27T10:00:00Z',
         breathingRate: { value: 16, unit: 'breaths/min' },
@@ -10,6 +12,8 @@ export const wellnessDays: WellnessDay[] = [
         heartRateVariability: { value: 45, unit: 'ms' },
     },
     {
+        id: '2',
+        score: '7',
         date: '2025-07-26',
         timeStamp: '2025-07-26T10:00:00Z',
         breathingRate: { value: 15, unit: 'breaths/min' },
@@ -18,6 +22,8 @@ export const wellnessDays: WellnessDay[] = [
         heartRateVariability: { value: 50, unit: 'ms' },
     },
     {
+        id: '3',
+        score: '6',
         date: '2025-07-25',
         timeStamp: '2025-07-25T10:00:00Z',
         breathingRate: { value: 17, unit: 'breaths/min' },
@@ -26,6 +32,8 @@ export const wellnessDays: WellnessDay[] = [
         heartRateVariability: { value: 42, unit: 'ms' },
     },
     {
+        id: '4',
+        score: '5',
         date: '2025-07-24',
         timeStamp: '2025-07-24T10:00:00Z',
         breathingRate: { value: 16, unit: 'breaths/min' },
@@ -34,6 +42,8 @@ export const wellnessDays: WellnessDay[] = [
         heartRateVariability: { value: 47, unit: 'ms' },
     },
     {
+        id: '5',
+        score: '9',        
         date: '2025-07-23',
         timeStamp: '2025-07-23T10:00:00Z',
         breathingRate: { value: 15, unit: 'breaths/min' },

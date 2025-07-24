@@ -4,52 +4,91 @@ import CardFourWellness from "../../components/ui/card-four-wellness";
 import { WellnessDay } from "../../models/wellness";
 import { StyleSheet } from "react-native";
 import ButtonSubmit from "../../components/ui/button";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../navigation/types";
+import { useEffect } from "react";
+import { deleteWellnessDay, getWellnessDayById } from "../../api/wellness-api";
+import React from "react";
+import { formatDateTime } from "../../utils/validation";
+import ConfirmDialog from "../../components/ui/cofirm-dialog";
 
-interface DetailReportProps {
-    wellnessDay: WellnessDay;
-}
+type DetailReportProps = NativeStackScreenProps<RootStackParamList, 'DetailReport'>;
 
-const handleDelete = (wellnessDay: WellnessDay) => {
-    // Implement delete functionality here
-    Alert.alert(`this wellnessDay: ${JSON.stringify(wellnessDay)}`);
-};
+const DetailReport: React.FC<DetailReportProps> = ({ navigation, route }) => {
+    const [wellnessDay, setWellnessDay] = React.useState<WellnessDay>();
+    const [dataChart, setDataChart] = React.useState<{ value: number; color: string }[]>([]);
+    const [loading, setLoading] = React.useState<boolean>(true);
+    const [showDialog, setShowDialog] = React.useState<boolean>(false);
+    const idWellnessDay = route.params.id;
 
-const DetailReport: React.FC<DetailReportProps> = ({ wellnessDay }) => {
-    const data = [
-        { value: 70, color: '#177AD5' },
-        { value: 30, color: 'lightgray' }
-    ];
+    const handleDelete = () => {
+        if (idWellnessDay) {
+            const isDeleted = deleteWellnessDay(idWellnessDay);
+            if (isDeleted) {
+                Alert.alert('Success', 'Wellness day deleted successfully');
+                navigation.goBack();
+            } else {
+                Alert.alert('Error', 'Failed to delete wellness day');
+            }
+        } else {
+            Alert.alert('Error', 'Invalid wellness day ID');
+        }
+    }
+
+    useEffect(() => {
+        const fetchWellnessData = async () => {
+            const fetch = await getWellnessDayById(idWellnessDay);
+            if (!fetch) {
+                Alert.alert('Error', 'No wellness data found for the selected date');
+                return;
+            }
+            setWellnessDay(fetch);
+        };
+        fetchWellnessData();
+    }, [idWellnessDay]);
+
+    useEffect(() => {
+        if (wellnessDay) {
+            setDataChart([
+                { value: wellnessDay.score ? parseInt(wellnessDay.score) : 0, color: '#4CAF50' },
+                { value: 10 - (wellnessDay.score ? parseInt(wellnessDay.score) : 0), color: 'lightgray' }
+            ]);
+        }
+    }, [wellnessDay]);
+
     return (
         <View style={styles.container}>
             <PieChart
                 donut
                 radius={80}
-                innerRadius={60}
-                data={data}
+                innerRadius={65}
+                data={dataChart}
                 centerLabelComponent={() => {
-                    return <Text style={{ fontSize: 30 }}>70%</Text>;
+                    return <Text style={{ fontSize: 20 }}>{wellnessDay?.score}/10</Text>;
                 }}
             />
-            <Text style={{ fontSize: 16, fontWeight: 'bold', marginVertical: 10 }}>
-                02-22-2003 - 13:01:20
+            <Text style={styles.titleTime}>
+                {wellnessDay?.timeStamp ? formatDateTime(wellnessDay.timeStamp) : ""}
             </Text>
-            <CardFourWellness wellnessDay={{
-                date: '2025-07-27',
-                timeStamp: '2025-07-27T10:00:00Z',
-                breathingRate: { value: 16, unit: 'breaths/min' },
-                heartRate: { value: 72, unit: 'bpm' },
-                stressLevel: { value: 3, unit: 'Moderate' },
-                heartRateVariability: { value: 45, unit: 'ms' },
-            }} />
-
-            <ButtonSubmit title="Delete" onPress={() => {handleDelete(wellnessDay)}} />
+            {wellnessDay && <CardFourWellness wellnessDay={wellnessDay} />}
+            <ButtonSubmit
+                title="Delete"
+                onPress={() => {
+                    setShowDialog(true);
+                }}
+            />
+            <ConfirmDialog
+                visible={showDialog}
+                message="Are you sure you want to delete this wellness day?"
+                onConfirm={handleDelete}
+                onCancel={() => setShowDialog(false)}
+            />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
@@ -63,6 +102,9 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.1,
     },
-
+    titleTime: {
+        fontSize: 15,
+        marginVertical: 20
+    }
 });
 export default DetailReport;

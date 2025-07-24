@@ -1,4 +1,3 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View, StyleSheet, Linking, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -13,8 +12,8 @@ import { User } from "../../models/user";
 // import { loginUser } from "../../api/UserApi";
 
 export const loginUser = (email: string, password: string): User | null => {
-    const user = users.find(u => u.Email === email && u.Password === password);
-    return user || null;
+  const user = users.find(u => u.Email === email && u.Password === password);
+  return user || null;
 }
 export function LoginScreen(): React.JSX.Element {
   const [email, setEmail] = React.useState('');
@@ -26,7 +25,7 @@ export function LoginScreen(): React.JSX.Element {
   const handleClickLogin = async () => {
     try {
       Alert.alert('This is list of users', JSON.stringify(users, null, 2));
-      const user = await loginUser(email, password);
+      const user = await loginUser("pp@gmail.com", "123");
       if (!user) {
         Alert.alert('Error', 'Email or password is incorrect');
         return;

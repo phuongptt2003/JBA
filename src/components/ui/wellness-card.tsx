@@ -4,6 +4,7 @@ import { WellnessDay } from "../../models/wellness";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/types";
+import { formatDateTime } from "../../utils/validation";
 
 type WellnessCardProps = {
   wellnessDay: WellnessDay;
@@ -14,16 +15,15 @@ const WellnessCard: React.FC<WellnessCardProps> = ({
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleClickDetailReport = () => {
-    
-    navigation.navigate('DetailReport', { wellness: wellnessDay });
+    navigation.navigate('DetailReport', { id: wellnessDay.id });
   };
   return (
     <TouchableOpacity style={styles.card} onPress={handleClickDetailReport}>
       <View style={styles.header}>
         <Text style={styles.title}>
-          Wellness Score: <Text style={styles.score}>{wellnessDay.score}</Text>
+          Wellness Score: <Text style={styles.score}>{wellnessDay.score}/10</Text>
         </Text>
-        <Text style={styles.timestamp}>{wellnessDay.timeStamp}</Text>
+        <Text style={styles.timestamp}>{formatDateTime(wellnessDay.timeStamp)}</Text>
       </View>
 
       <View style={styles.row}>

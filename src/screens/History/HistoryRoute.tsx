@@ -1,6 +1,5 @@
 import { Alert, ScrollView, Text, View } from "react-native";
 import { Calendar, DateData } from "react-native-calendars";
-import { wellnessDays } from "../../data/wellness";
 import WellnessCard from "../../components/ui/wellness-card";
 import React, { useCallback, useEffect } from "react";
 import { getWellnessDay, getWellnessDays } from "../../api/wellness-api";
@@ -50,9 +49,10 @@ const HistoryRoute: React.FC = () => {
             />
             <ScrollView>
                 {wellnessFiltered ? (
-                    <WellnessCard // Add your onPress handler here
+                    <WellnessCard
                         wellnessDay={wellnessFiltered}
                     />
+
                 ) : (
                     listWellness.map((day, index) => (
                         <WellnessCard
