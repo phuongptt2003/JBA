@@ -24,7 +24,7 @@ export function LoginScreen(): React.JSX.Element {
 
   const handleClickLogin = async () => {
     try {
-      Alert.alert('This is list of users', JSON.stringify(users, null, 2));
+      // Alert.alert('This is list of users', JSON.stringify(users, null, 2));
       const user = await loginUser("pp@gmail.com", "123");
       if (!user) {
         Alert.alert('Error', 'Email or password is incorrect');

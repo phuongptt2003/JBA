@@ -1,3 +1,4 @@
+import { User } from "../models/user";
 import { WellnessDay } from "../models/wellness";
 
 export type RootStackParamList = {
@@ -9,4 +10,6 @@ export type RootStackParamList = {
   ResetPassword: { email: string };
   ChangePassword: { email: string };
   DetailReport: { id: string };
+  EditProfile: { user: User };
+  DetailScanFace: undefined; 
 };

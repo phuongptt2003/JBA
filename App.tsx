@@ -26,20 +26,24 @@ import ForgotPassword, { ResetPasswordScreen, VerifyOTP } from './src/screens/Au
 import store from './src/store/store';
 import { LanguageProvider } from './src/contexts/language-context';
 import DetailReport from './src/screens/History/DetailReport';
+import EditProfile from './src/screens/Account/EditProfile';
+import DetailScanFace from './src/screens/Scan/DetailScanFace';
 
 const Stack = createNativeStackNavigator();
 
 function RootStack() {
   return (
     <Stack.Navigator initialRouteName='Login'>
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Register" component={Register} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-      <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
-      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-      <Stack.Screen name="ChangePassword" component={ResetPasswordScreen} />
-      <Stack.Screen name="DetailReport" component={DetailReport} />
+      <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
+      <Stack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
+      <Stack.Screen options={{ headerShown: false }} name="Register" component={Register} />
+      <Stack.Screen options={{ headerShown: false }} name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen options={{ headerShown: false }} name="VerifyOTP" component={VerifyOTP} />
+      <Stack.Screen options={{ headerShown: false }} name="ResetPassword" component={ResetPasswordScreen} />
+      <Stack.Screen options={{ headerShown: false }} name="ChangePassword" component={ResetPasswordScreen} />
+      <Stack.Screen options={{ headerShown: false }} name="DetailReport" component={DetailReport} />
+      <Stack.Screen options={{ headerShown: false }} name="EditProfile" component={EditProfile} />
+      <Stack.Screen options={{ headerShown: false }} name="DetailScanFace" component={DetailScanFace} />
     </Stack.Navigator>
   );
 }

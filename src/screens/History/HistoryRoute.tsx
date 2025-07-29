@@ -9,6 +9,7 @@ const HistoryRoute: React.FC = () => {
     const [listWellness, setlistWellness] = React.useState<WellnessDay[]>([]);
     const [selectedDate, setSelectedDate] = React.useState('');
     const [wellnessFiltered, setWellnessFiltered] = React.useState<WellnessDay>();
+    const [wellnessCurrent, setWellnessCurrent] = React.useState<WellnessDay>();
 
     useEffect(() => {
         const fetchWellnessData = async () => {
@@ -21,6 +22,19 @@ const HistoryRoute: React.FC = () => {
     useEffect(() => {
         fetchWellnessData();
     }, [selectedDate]);
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+        const getCurrent = listWellness.find(
+            day => day.date === formattedDate
+        );
+        if (getCurrent) {
+            setWellnessCurrent(getCurrent);
+        } else {
+            setWellnessCurrent(undefined);
+        }
+    }, [listWellness]);
 
     const fetchWellnessData = useCallback(async () => {
         if (selectedDate) {
@@ -52,15 +66,11 @@ const HistoryRoute: React.FC = () => {
                     <WellnessCard
                         wellnessDay={wellnessFiltered}
                     />
-
-                ) : (
-                    listWellness.map((day, index) => (
-                        <WellnessCard
-                            key={index}
-                            wellnessDay={day}
-                        />
-                    ))
-                )}
+                ) : wellnessCurrent ? (
+                    <WellnessCard
+                        wellnessDay={wellnessCurrent}
+                    />
+                ) : null}
             </ScrollView>
 
         </View>

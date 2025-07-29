@@ -10,12 +10,15 @@ import { User } from '../../models/user';
 
 const RegisterScreen: React.FC = () => {
     const [user, setUser] = React.useState<User>({
+        Id: '',
         Username: '',
         Password: '',
         PhoneNumber: '',
         Email: '',
         ConfirmPassword: '',
-        InvitationCode: ''
+        InvitationCode: '',
+        Weight: 0,
+        Height: 0
     });
 
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -28,8 +31,10 @@ const RegisterScreen: React.FC = () => {
         if (!user.Email) missingFields.push('Email');
         if (!user.Password) missingFields.push('Password');
         if (!user.ConfirmPassword) missingFields.push('Confirm Password');
+        if (!user.InvitationCode) missingFields.push('Invitation Code');
+        if (user.Weight <= 0) missingFields.push('Weight');
+        if (user.Height <= 0) missingFields.push('Height');
         
-
         if (missingFields.length > 0) {
             Alert.alert('Thiếu thông tin', `Vui lòng nhập: ${missingFields.join(', ')}`);
             return;
@@ -90,6 +95,18 @@ const RegisterScreen: React.FC = () => {
                 value={user.InvitationCode}
                 onChangeText={(text) => setUser({ ...user, InvitationCode: text })}
                 placeholder="Invitation Code"
+            />
+            <Input
+                value={user.Weight.toString()}
+                onChangeText={(text) => setUser({ ...user, Weight: parseFloat(text) })}
+                placeholder="Weight"
+                keyboardType="numeric"
+            />
+            <Input
+                value={user.Height.toString()}
+                onChangeText={(text) => setUser({ ...user, Height: parseFloat(text) })}
+                placeholder="Height"
+                keyboardType="numeric"
             />
             <ButtonSubmit 
                 title="Sign Up"

@@ -35,15 +35,15 @@ const AccountRoute: React.FC<AccountRouteProps> = React.memo(({ user }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.welcome}>{t('welcome')},</Text>
-        <Text style={styles.username}>{user ? user.Username : ''}</Text>
+        <Text style={styles.username}>{user ? user.Password : ''}</Text>
       </View>
 
       <View style={styles.card}>
         <TouchableOpacity
           style={styles.item}
-          onPress={() => setShowDialog(true)}
+          onPress={() => navigation.navigate('EditProfile', { user })}
         >
-          <Text style={styles.itemText}>📄 {t('changeLanguage')}</Text>
+          <Text style={styles.itemText}>📄 {t('personalInfo')}</Text>
         </TouchableOpacity>
         <UserInfoDialog
           visible={showDialog}
