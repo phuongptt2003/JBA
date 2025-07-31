@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import { UserInfoDialog } from "../../components/ui/user-dialog";
 import { User } from "../../models/user";
@@ -22,6 +22,14 @@ const AccountRoute: React.FC<AccountRouteProps> = React.memo(({ user }) => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    console.log("User data in AccountRoute:", user);
+    console.log("Name: ", user.username);
+    console.log("Email: ", user.email);
+    console.log("Phone: ", user.phone);
+    console.log("Weight: ", user.weight);
+    console.log("Height: ", user.height);
+  }, [user]);
 
   const getLanguageText = () => {
     return language === "en" ? "English" : "Tiếng Việt";
@@ -35,7 +43,7 @@ const AccountRoute: React.FC<AccountRouteProps> = React.memo(({ user }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.welcome}>{t('welcome')},</Text>
-        <Text style={styles.username}>{user ? user.Username : ''}</Text>
+        <Text style={styles.username}>{user ? user.username : ''}</Text>
       </View>
 
       <View style={styles.card}>
@@ -59,7 +67,7 @@ const AccountRoute: React.FC<AccountRouteProps> = React.memo(({ user }) => {
           />
         </View>
 
-        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('ChangePassword', { email: user.Email })}>
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('ChangePassword', { email: user.email })}>
           <Text style={styles.itemText}>🔑 {t('changePassword')}</Text>
         </TouchableOpacity>
 

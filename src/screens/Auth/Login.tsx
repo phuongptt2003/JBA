@@ -9,66 +9,67 @@ import { login } from "../../store/slices/user-slice";
 import ButtonSubmit from "../../components/ui/button";
 import { users } from "../../data/users";
 import { User } from "../../models/user";
-// import { loginUser } from "../../api/UserApi";
+import Input from "../../components/ui/input";
+import { Image } from "react-native";
+import { loginUser } from "../../api/user-api";
 
-export const loginUser = (email: string, password: string): User | null => {
-  const user = users.find(u => u.Email === email && u.Password === password);
-  return user || null;
-}
 export function LoginScreen(): React.JSX.Element {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
 
-
   const handleClickLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      Alert.alert('Error', 'Please enter a valid email address');
+      return;
+    }
+
     try {
-      // Alert.alert('This is list of users', JSON.stringify(users, null, 2));
-      const user = await loginUser("pp@gmail.com", "123");
+      const user = await loginUser(email, password, 'web-app-v1');
+      
       if (!user) {
         Alert.alert('Error', 'Email or password is incorrect');
         return;
       }
 
       dispatch(login(user));
+      
+      console.log('Login successful:', user);
       Alert.alert('Success', 'Login successful');
       navigation.navigate('Home', { email });
+      
     } catch (error) {
-      Alert.alert('Error', 'Something went wrong');
-      console.error(error);
+      console.error('Login error:', error);
     }
   };
 
   return (
     <View style={styles.container}>
+      <Image
+        source={{ uri: 'https://play-lh.googleusercontent.com/xWvxp16yYaYlz2PubTrNjDfn8EcKizgDMQzjjDrQaXKJHwC7PKP0hkMJTiGnTJOPhCvo' }}
+        style={{ width: 200, height: 200 }}
+        resizeMode="contain"
+      />
       <Text style={styles.title}>Sign In</Text>
       <Input
         value={email}
-        type="email"
         onChangeText={setEmail}
         placeholder="Email"
+        icon='email'
       />
       <Input
         value={password}
         onChangeText={setPassword}
         placeholder="Password"
+        icon='lock'
         secureTextEntry={true}
       />
-      {/* <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email"
-        style={styles.input}
-        keyboardType="email-address"
-      />
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Password"
-        style={styles.input}
-        secureTextEntry={true}
-      /> */}
       <View style={{ alignItems: 'flex-end', width: '90%' }}>
         <Text style={styles.linkText} onPress={() => { navigation.navigate('ForgotPassword') }}>Forgot Password?</Text>
       </View>
@@ -89,8 +90,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#c1d1f6ff',
+    backgroundColor: 'white',
+    fontFamily: 'sans-serif',
+    fontWeight: 'normal',
   },
   title: {
     fontSize: 28,
@@ -123,32 +127,6 @@ const styles = StyleSheet.create({
   linkText: {
     right: 0,
     color: 'blue',
-    textDecorationLine: 'underline',
   },
 }
-);
-
-export const Input = ({
-  value,
-  onChangeText,
-  placeholder,
-  style,
-  secureTextEntry = false,
-  ...props
-}: {
-  value: string;
-  onChangeText: (text: string) => void;
-  placeholder?: string;
-  style?: any;
-  secureTextEntry?: boolean;
-  [key: string]: any;
-}) => (
-  <TextInput
-    value={value}
-    onChangeText={onChangeText}
-    style={[styles.input, style]}
-    placeholder={placeholder}
-    secureTextEntry={secureTextEntry}
-    {...props}
-  />
 );

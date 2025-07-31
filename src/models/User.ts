@@ -1,11 +1,15 @@
 export interface User{
-    Id: string;
-    Username: string;
-    Password: string;
-    PhoneNumber: string;
-    Email: string;
-    ConfirmPassword: string;
-    InvitationCode: string;
-    Weight: number;
-    Height: number;
+    _id: string;
+    username: string;
+    password: string;
+    phone: string;
+    email: string;
+    confirmPassword: string;
+    invitationCode: string;
+    weight: number;
+    height: number;
+    role: string;
+    address: string;
+    optionEmail: string;
+    
 }

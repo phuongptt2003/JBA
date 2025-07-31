@@ -22,7 +22,7 @@ import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import { LoginScreen } from './src/screens/Auth/Login';
 import HomeScreen from './src/screens/Home';
 import Register from './src/screens/Auth/Register';
-import ForgotPassword, { ResetPasswordScreen, VerifyOTP } from './src/screens/Auth/Authentication';
+import ForgotPassword, { ChangePasswordScreen, ResetPasswordScreen, VerifyOTP } from './src/screens/Auth/Authentication';
 import store from './src/store/store';
 import { LanguageProvider } from './src/contexts/language-context';
 import DetailReport from './src/screens/History/DetailReport';
@@ -40,7 +40,7 @@ function RootStack() {
       <Stack.Screen options={{ headerShown: false }} name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen options={{ headerShown: false }} name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen options={{ headerShown: false }} name="ResetPassword" component={ResetPasswordScreen} />
-      <Stack.Screen options={{ headerShown: false }} name="ChangePassword" component={ResetPasswordScreen} />
+      <Stack.Screen options={{ headerShown: false }} name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen options={{ headerShown: true }} name="DetailReport" component={DetailReport} />
       <Stack.Screen options={{ headerShown: true }} name="EditProfile" component={EditProfile} />
       <Stack.Screen options={{ headerShown: true }} name="DetailScanFace" component={DetailScanFace} />

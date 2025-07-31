@@ -24,13 +24,18 @@ const EditProfile: React.FC<EditProfileProps> = ({ navigation, route }) => {
 
     useEffect(() => {
         console.log('EditProfile user:', user);
+        console.log('Email: ', email);
+        console.log('Phone: ', phone);
+        console.log('Weight: ', weight);
+        console.log('Height: ', height);
+
     }, [])
 
     const dispatch = useDispatch();
     const handleUpdateUser = () => {
 
         dispatch(updateUser({
-            id: user.id,
+            _id: user._id,
             username: username,
             email: email,
             phone: phone,

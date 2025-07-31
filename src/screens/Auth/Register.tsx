@@ -4,9 +4,13 @@ import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Input } from '../../components/ui/input';
 import ButtonSubmit from '../../components/ui/button';
-import { isValidEmail, isValidVietnamesePhone } from '../../utils/validation';
+import { formatHeight, formatWeight, isValidEmail, isValidVietnamesePhone } from '../../utils/validation';
 import { RootStackParamList } from '../../navigation/types';
 import { User } from '../../models/user';
+import { registerUser } from '../../api/user-api';
+import { useDispatch } from 'react-redux';
+import { loginUser } from './Login';
+import { login } from '../../store/slices/user-slice';
 
 const RegisterScreen: React.FC = () => {
     const [user, setUser] = React.useState<User>({
@@ -22,8 +26,9 @@ const RegisterScreen: React.FC = () => {
     });
 
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const dispatch = useDispatch();
 
-    function handleLogin() {
+    const handleLogin = async () => {
         console.log('Register button clicked');
         const missingFields = [];
         if (!user.Username) missingFields.push('Username');
@@ -31,88 +36,115 @@ const RegisterScreen: React.FC = () => {
         if (!user.Email) missingFields.push('Email');
         if (!user.Password) missingFields.push('Password');
         if (!user.ConfirmPassword) missingFields.push('Confirm Password');
-        if (!user.InvitationCode) missingFields.push('Invitation Code');
+        // if (!user.InvitationCode) missingFields.push('Invitation Code');
         if (user.Weight <= 0) missingFields.push('Weight');
         if (user.Height <= 0) missingFields.push('Height');
-        
+
         if (missingFields.length > 0) {
-            Alert.alert('Thiếu thông tin', `Vui lòng nhập: ${missingFields.join(', ')}`);
+            Alert.alert('Missing Information', `Please enter: ${missingFields.join(', ')}`);
             return;
         }
 
         if (!isValidEmail(user.Email)) {
-            Alert.alert('Lỗi', 'Email không hợp lệ');
+            Alert.alert('Error', 'Invalid email');
             return;
         }
 
         if (!isValidVietnamesePhone(user.PhoneNumber)) {
-            Alert.alert('Lỗi', 'Số điện thoại không hợp lệ');
+            Alert.alert('Error', 'Invalid phone number');
             return;
         }
 
         if (user.Password !== user.ConfirmPassword) {
-            Alert.alert('Lỗi', 'Mật khẩu xác nhận không khớp');
+            Alert.alert('Error', 'Password confirmation does not match');
             return;
         }
         if (user.Password === '' || user.ConfirmPassword === '') {
-            Alert.alert('Lỗi', 'Vui lòng nhập mật khẩu và xác nhận mật khẩu');
+            Alert.alert('Error', 'Please enter password and confirm password');
             return;
         }
-        Alert.alert('Thành công', 'Đăng ký thành công');
-        navigation.navigate('Home', { email: user.Email });
+        // if (user.InvitationCode === '') {
+        //     Alert.alert('Error', 'Please enter an invitation code');
+        //     return;
+        // }
+        if (user.Weight <= 0 || user.Height <= 0) {
+            Alert.alert('Error', 'Please enter valid weight and height');
+            return;
+        }
+
+        const isRegistered = await registerUser(user.Email, user.Password, user.Username, user.PhoneNumber, user.Role, user.OptionEmail, user.Address, user.InvitationCode);
+        if (isRegistered) {
+            Alert.alert('Success', 'Registration successful');
+            const userLogin = await loginUser(user.Email, user.Password);
+            if (userLogin) {
+                dispatch(login(userLogin));
+                navigation.navigate('Home', { email: user.Email });
+            } else {
+                Alert.alert('Error', 'Login failed after registration');
+            }
+        } else {
+            Alert.alert('Error', 'Email or Phone number already exists');
+        }
     }
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Register Account</Text>
-            <Input 
+            <Input
                 value={user.Username}
                 onChangeText={(text) => setUser({ ...user, Username: text })}
+                icon='supervised-user-circle'
                 placeholder="Username"
             />
             <Input
                 value={user.PhoneNumber}
                 onChangeText={(text) => setUser({ ...user, PhoneNumber: text })}
-                placeholder="Phone Number"  
+                placeholder="Phone Number"
+                icon='phone'
             />
             <Input
                 value={user.Email}
                 onChangeText={(text) => setUser({ ...user, Email: text })}
                 placeholder="Email"
+                icon='mail'
             />
             <Input
                 value={user.Password}
                 onChangeText={(text) => setUser({ ...user, Password: text })}
                 placeholder="Password"
                 secureTextEntry={true}
+                icon='lock'
             />
             <Input
                 value={user.ConfirmPassword}
                 onChangeText={(text) => setUser({ ...user, ConfirmPassword: text })}
                 placeholder="Confirm Password"
                 secureTextEntry={true}
+                icon='lock'
             />
             <Input
                 value={user.InvitationCode}
                 onChangeText={(text) => setUser({ ...user, InvitationCode: text })}
                 placeholder="Invitation Code"
+                icon='code'
             />
             <Input
-                value={user.Weight.toString()}
+                value={formatWeight(user.Weight)}
                 onChangeText={(text) => setUser({ ...user, Weight: parseFloat(text) })}
                 placeholder="Weight"
                 keyboardType="numeric"
+                icon='monitor-weight'
             />
             <Input
-                value={user.Height.toString()}
-                onChangeText={(text) => setUser({ ...user, Height: parseFloat(text) })}
-                placeholder="Height"
+                value={formatHeight(user.Height)}
+                icon="height"
                 keyboardType="numeric"
+                onChangeText={(text) => setUser({ ...user, Height: parseFloat(text) })}
             />
-            <ButtonSubmit 
+            <ButtonSubmit
                 title="Sign Up"
                 onPress={() => handleLogin()}
             />
-            <Text style={{top:20}} onPress={()=> navigation.navigate('Login')}>
+            <Text style={{ top: 20 }} onPress={() => navigation.navigate('Login')}>
                 Already have an account? <Text style={{ color: 'blue' }}>Login</Text>
             </Text>
         </View>

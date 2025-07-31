@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, Dimensions, ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation/types';
 import { useSelector } from 'react-redux';
@@ -13,10 +13,19 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 const HomeScreen: React.FC<Props> = ({ route }) => {
   const email = route.params.email;
   const user = useSelector((state: RootState) => state.user.currentUser);
+  useEffect(() => {
+    console.log('HomeScreen user:', user);
+    console.log('Email: ', email);
+    console.log('Phone: ', user?.phone);
+    console.log('Weight: ', user?.weight);
+    console.log('Height: ', user?.height);
+    console.log('User ID: ', user?._id);
+    console.log('User Name: ', user?.username);
+  }, [user, email]);
 
   return (
     <View style={styles.container}>
-      <TabNavigator user={user} />
+      {user ? <TabNavigator user={user} /> : <Text>Loading...</Text>}
     </View>
   );
 };

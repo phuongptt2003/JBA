@@ -7,43 +7,11 @@ import HistoryRoute from '../screens/History/HistoryRoute';
 import { ScanRoute } from '../screens/Scan/ScanRoute';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
-
-// const initialLayout = { width: Dimensions.get('window').width };
-
-// const TabNavigator = ({ user }: { user: any }) => {
-//     const [index, setIndex] = useState(0);
-//     const routes = [
-//         { key: 'history', title: 'History' },
-//         { key: 'scan', title: 'Scan' },
-//         { key: 'account', title: 'Account' },
-//     ];
-
-//     const renderScene = ({ route }: { route: { key: string } }) => {
-//         switch (route.key) {
-//             case 'history':
-//                 return <HistoryRoute />;
-//             case 'scan':
-//                 return <ScanRoute />;
-//             case 'account':
-//                 return <AccountRoute user={user} />;
-//             default:
-//                 return null;
-//         }
-//     };
-
-//     return (
-//         <TabView
-//             navigationState={{ index, routes }}
-//             renderScene={renderScene}
-//             onIndexChange={setIndex}
-//             initialLayout={initialLayout}
-//         />
-//     );  
-// };
+import { User } from '../models/user';
 
 const Tab = createBottomTabNavigator();
 
-const TabNavigator = ({ user }: { user: any }) => {
+const TabNavigator = ({ user }: { user: User }) => {
     return (
         <Tab.Navigator screenOptions={{ tabBarShowLabel: false }}>
             <Tab.Screen
