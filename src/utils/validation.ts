@@ -1,3 +1,6 @@
+export function extractNumeric(input: string): string {
+    return input.replace(/[^\d.]/g, '');
+}
 
 export function isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

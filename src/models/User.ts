@@ -11,5 +11,7 @@ export interface User{
     role: string;
     address: string;
     optionEmail: string;
-    
+    age?: number;
+    gender?: string;
+    smokingStatus?: string;
 }

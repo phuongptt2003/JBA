@@ -13,13 +13,13 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        login(state, action: PayloadAction<User>) {
+        loginStore(state, action: PayloadAction<User>) {
             state.currentUser = action.payload;
         },
-        logout(state) {
+        logoutStore(state) {
             state.currentUser = null;
         },
-        updateUser(state, action: PayloadAction<Partial<User>>) {
+        updateUserStore(state, action: PayloadAction<Partial<User>>) {
             if (state.currentUser) {
                 state.currentUser = { ...state.currentUser, ...action.payload };
             }
@@ -29,5 +29,5 @@ const userSlice = createSlice({
 
 
 
-export const { login, logout, updateUser } = userSlice.actions;
+export const { loginStore, logoutStore, updateUserStore } = userSlice.actions;
 export default userSlice.reducer;

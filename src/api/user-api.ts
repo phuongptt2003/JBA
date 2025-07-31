@@ -1,7 +1,9 @@
+
 import axios from "axios";
 import { users } from "../data/users";
 import { User } from "../models/user";
 import * as tokenStorage from "../utils/token-storage";
+import { Profile } from "../models/profile";
 
 export const baseUrl = 'https://jbaai.onrender.com'
 
@@ -76,7 +78,7 @@ export const registerUser = async (email: string, password: string, username: st
   }
 };
 
-export const loginUser = async (email: string, password: string, clientId: string): Promise<User | null> => {
+export const loginUser = async (email: string, password: string, clientId: string): Promise<User> => {
   try {
     const formData = new FormData();
     formData.append('email', email);
@@ -112,8 +114,9 @@ export const loginUser = async (email: string, password: string, clientId: strin
       console.warn('No refreshToken returned from login API');
     }
     console.log('AccessToken: ', accessToken);
-    console.log('Login response:', response.data);
-    return response.data;
+    const user = response.data?.data?.user;
+    console.log('User ne:', user);
+    return user;
   } catch (error) {
     console.error('Login error details:', error);
     throw error;
@@ -138,7 +141,7 @@ export const logoutUser = async (refreshToken: string, clientId: string = 'web-a
 
     console.log('Attempting logout with URL:', configurationObject.url);
     const response = await axios(configurationObject);
-    // Xoá accessToken và refreshToken khi logout thành công
+    
     await tokenStorage.removeRefreshToken();
     if (tokenStorage.removeToken) {
       await tokenStorage.removeToken();
@@ -248,12 +251,68 @@ export const getUsers = async (): Promise<User[]> => {
   return response.data;
 };
 
+export const getProfile = async () : Promise<Profile> => {
+  const token = await tokenStorage.getToken();
+  const configurationObject = {
+    method: 'post',
+    url: `${baseUrl}/api/v1/profile`,
+    headers: {
+      'Accept': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` }),
+    },
+  };
+  try {
+    const response = await axios(configurationObject);    
+    console.log('Get profile response:', response.data);
+    return response.data?.data?.profile;
+  } catch (error) {
+    console.error('Get profile error details:', error);
+    throw error;
+  }
+};
+
+export const updateProfile = async (data: {
+  height?: number;
+  weight?: number;
+  age?: number;
+  gender?: string;
+  smokingStatus?: number;
+  username?: string;
+}): Promise<any> => {
+  try {
+    const token = await tokenStorage.getToken();
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        formData.append(key, value.toString());
+      }
+    });
+    const configurationObject = {
+      method: 'post',
+      url: `${baseUrl}/api/v1/profile/update`,
+      data: formData,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
+      },
+    };
+    console.log('Attempting update user with URL:', configurationObject.url);
+    const response = await axios(configurationObject);
+    console.log('Update user response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Update user error details:', error);
+    throw error;
+  }
+};
+
 // export const getUsers = (): User[] => {
 //   return users;
 // };
-export const getUser = (username: string): User | undefined => {
-  return users.find(user => user.username === username);
-};
+// export const getUser = (username: string): User | undefined => {
+//   return users.find(user => user.username === username);
+// };
 // export const updatePassword = async (email: string, newPassword: string): Promise<boolean> => {
 //   const userIndex = users.findIndex(user => user.Email === email);
 //   if (userIndex !== -1) {
@@ -266,14 +325,14 @@ export const getUser = (username: string): User | undefined => {
 //   console.log('User not found for email:', email);
 //   return false;
 // };
-export const updateUser = (username: string, updatedData: Partial<User>): boolean => {
-  const index = users.findIndex(user => user.username === username);
-  if (index !== -1) {
-    users[index] = { ...users[index], ...updatedData };
-    return true;
-  }
-  return false;
-};
+// export const updateUser = (username: string, updatedData: Partial<User>): boolean => {
+//   const index = users.findIndex(user => user.username === username);
+//   if (index !== -1) {
+//     users[index] = { ...users[index], ...updatedData };
+//     return true;
+//   }
+//   return false;
+// };
 // export const loginUser = async (email: string, password: string): Promise<User | null> => {
 //     console.log('Attempting login with:', email, password);
 //     const user = users.find(u => u.Email === email && u.Password === password);

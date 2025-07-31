@@ -7,8 +7,10 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/types";
 import { useDispatch } from "react-redux";
-import { logout } from "../../store/slices/user-slice";
+import { logoutStore } from "../../store/slices/user-slice";
 import { useLanguage } from "../../contexts/language-context";
+import { logoutUser } from "../../api/user-api";
+import { getToken } from "../../utils/token-storage";
 
 type AccountRouteProps = {
   user: User;
@@ -22,20 +24,21 @@ const AccountRoute: React.FC<AccountRouteProps> = React.memo(({ user }) => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log("User data in AccountRoute:", user);
-    console.log("Name: ", user.username);
-    console.log("Email: ", user.email);
-    console.log("Phone: ", user.phone);
-    console.log("Weight: ", user.weight);
-    console.log("Height: ", user.height);
-  }, [user]);
+  // useEffect(() => {
+  //   console.log("User data in AccountRoute:", user);
+  //   console.log("Name: ", user.username);
+  //   console.log("Email: ", user.email);
+  //   console.log("Phone: ", user.phone);
+  //   console.log("Weight: ", user.weight);
+  //   console.log("Height: ", user.height);
+  // }, [user]);
 
   const getLanguageText = () => {
     return language === "en" ? "English" : "Tiếng Việt";
   }
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async() => {
+    dispatch(logoutStore());
+    
     navigation.navigate('Login');
   }
 
