@@ -61,4 +61,14 @@ export const wellnessDays: WellnessDay[] = [
         stressLevel: { value: 2, unit: 'Low' },
         heartRateVariability: { value: 52, unit: 'ms' },
     },
+    {
+        id: '6',
+        score: '8',
+        date: '2025-07-30',
+        timeStamp: '2025-07-30T10:00:00Z',
+        breathingRate: { value: 16, unit: 'breaths/min' },
+        heartRate: { value: 72, unit: 'bpm' },
+        stressLevel: { value: 3, unit: 'Moderate' },
+        heartRateVariability: { value: 45, unit: 'ms' },
+    }
 ];

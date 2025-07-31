@@ -31,11 +31,11 @@ export const ButtonSubmit: React.FC<ButtonProps> = ({
 const styles = StyleSheet.create({
     button: {
         top: 20,
-        backgroundColor: 'lightpink',
+        backgroundColor: '#f49696ff',
         padding: 10,
         margin: 10,
         alignItems: 'center',
-        borderRadius: 20,
+        borderRadius: 10,
         width: '90%',
     },
     disabled: {

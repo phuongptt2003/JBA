@@ -41,9 +41,9 @@ function RootStack() {
       <Stack.Screen options={{ headerShown: false }} name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen options={{ headerShown: false }} name="ResetPassword" component={ResetPasswordScreen} />
       <Stack.Screen options={{ headerShown: false }} name="ChangePassword" component={ResetPasswordScreen} />
-      <Stack.Screen options={{ headerShown: false }} name="DetailReport" component={DetailReport} />
-      <Stack.Screen options={{ headerShown: false }} name="EditProfile" component={EditProfile} />
-      <Stack.Screen options={{ headerShown: false }} name="DetailScanFace" component={DetailScanFace} />
+      <Stack.Screen options={{ headerShown: true }} name="DetailReport" component={DetailReport} />
+      <Stack.Screen options={{ headerShown: true }} name="EditProfile" component={EditProfile} />
+      <Stack.Screen options={{ headerShown: true }} name="DetailScanFace" component={DetailScanFace} />
     </Stack.Navigator>
   );
 }

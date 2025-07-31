@@ -35,7 +35,7 @@ const AccountRoute: React.FC<AccountRouteProps> = React.memo(({ user }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.welcome}>{t('welcome')},</Text>
-        <Text style={styles.username}>{user ? user.Password : ''}</Text>
+        <Text style={styles.username}>{user ? user.Username : ''}</Text>
       </View>
 
       <View style={styles.card}>
@@ -88,25 +88,29 @@ const AccountRoute: React.FC<AccountRouteProps> = React.memo(({ user }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   text: {
     fontSize: 24,
     fontWeight: 'bold',
   },
   header: {
-    width: "100%",
-    backgroundColor: "#3b82f6",
-    paddingVertical: 30,
+    width: "95%",
+    backgroundColor: "#efd7e5ff",
+    paddingVertical: 50,
     alignItems: "center",
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
   welcome: {
-    color: "#fff",
+    color: "black",
     fontSize: 18,
   },
   username: {
-    color: "#fff",
+    color: "black",
     fontSize: 24,
     fontWeight: "bold",
   },
@@ -137,7 +141,7 @@ const styles = StyleSheet.create({
   signOut: {
     marginTop: 30,
     alignSelf: "center",
-    backgroundColor: "#ef4444",
+    backgroundColor: "#f65f5fff",
     paddingVertical: 12,
     paddingHorizontal: 40,
     borderRadius: 8,
