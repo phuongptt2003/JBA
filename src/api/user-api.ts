@@ -4,6 +4,7 @@ import { users } from "../data/users";
 import { User } from "../models/user";
 import * as tokenStorage from "../utils/token-storage";
 import { Profile } from "../models/profile";
+import { data } from "react-router-dom";
 
 export const baseUrl = 'https://jbaai.onrender.com'
 
@@ -141,7 +142,7 @@ export const logoutUser = async (refreshToken: string, clientId: string = 'web-a
 
     console.log('Attempting logout with URL:', configurationObject.url);
     const response = await axios(configurationObject);
-    
+
     await tokenStorage.removeRefreshToken();
     if (tokenStorage.removeToken) {
       await tokenStorage.removeToken();
@@ -251,7 +252,7 @@ export const getUsers = async (): Promise<User[]> => {
   return response.data;
 };
 
-export const getProfile = async () : Promise<Profile> => {
+export const getProfile = async (): Promise<Profile> => {
   const token = await tokenStorage.getToken();
   const configurationObject = {
     method: 'post',
@@ -262,7 +263,7 @@ export const getProfile = async () : Promise<Profile> => {
     },
   };
   try {
-    const response = await axios(configurationObject);    
+    const response = await axios(configurationObject);
     console.log('Get profile response:', response.data);
     return response.data?.data?.profile;
   } catch (error) {
@@ -303,6 +304,106 @@ export const updateProfile = async (data: {
     return response.data;
   } catch (error) {
     console.error('Update user error details:', error);
+    throw error;
+  }
+};
+
+export const switchEmailNotification = async (): Promise<any> => {
+  try {
+    const token = await tokenStorage.getToken();
+    const configurationObject = {
+      method: 'post',
+      url: `${baseUrl}/api/v1/user/switch-notification`,
+      data: {},
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
+      },
+    };
+    const response = await axios(configurationObject);
+    console.log('Switch email notification response:', response.data);
+    return response.data;
+  } catch (error) {
+    const token = await tokenStorage.getToken();
+    console.log('Token used for switch notification:', token);
+    console.error('Switch email notification error details:', error);
+    throw error;
+  }
+}
+
+export const changeLanguage = async (language: string): Promise<any> => {
+  try {
+    const token = await tokenStorage.getToken();
+    const configurationObject = {
+      method: 'post',
+      url: `${baseUrl}/api/v1/user/change-language`,
+      data: { language },
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
+      },
+    };
+    const response = await axios(configurationObject);
+    console.log('Change language response:', response.data);
+  } catch (error) {
+    const token = await tokenStorage.getToken();
+    console.log('Token used for change language:', token);
+    console.error('Change language error details:', error);
+    throw error;
+  }
+};
+
+export const getHealthDataByRange = async (type: string, data: string): Promise<any> => {
+  try {
+    const token = await tokenStorage.getToken();
+    const configurationObject = {
+      method: 'post',
+      url: `${baseUrl}/api/v1/health-data/get-health-data-by-range`,
+      data: {
+        type,
+        data
+      },
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
+      },
+    };
+    const response = await axios(configurationObject);
+    console.log('Get health data by range response:', response.data);
+    return response.data;
+  } catch (error) {
+    const token = await tokenStorage.getToken();
+    console.log('Token used for get health data by range:', token);
+    console.error('Get health data by range error details:', error);
+    throw error;
+  }
+};
+
+export const createHealthData = async (healthData: string): Promise<any> => {
+  try {
+    const token = await tokenStorage.getToken();
+    const configurationObject = {
+      method: 'post',
+      url: `${baseUrl}/api/v1/health-data/update`,
+      data: {
+        healthData: healthData,
+      },
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
+      },
+    };
+    const response = await axios(configurationObject);
+    console.log('Create health data response:', response.data);
+    return response.data;
+  } catch (error) {
+    const token = await tokenStorage.getToken();
+    console.log('Token used for create health data:', token);
+    console.error('Create health data error details:', error);
     throw error;
   }
 };

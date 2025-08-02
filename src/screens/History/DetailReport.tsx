@@ -1,7 +1,6 @@
 import { Alert, Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 import CardFourWellness from "../../components/ui/card-four-wellness";
-import { WellnessDay } from "../../models/wellness";
 import { StyleSheet } from "react-native";
 import ButtonSubmit from "../../components/ui/button";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -15,15 +14,15 @@ import ConfirmDialog from "../../components/ui/cofirm-dialog";
 type DetailReportProps = NativeStackScreenProps<RootStackParamList, 'DetailReport'>;
 
 const DetailReport: React.FC<DetailReportProps> = ({ navigation, route }) => {
-    const [wellnessDay, setWellnessDay] = React.useState<WellnessDay>();
+    // const [wellnessDay, setWellnessDay] = React.useState<>();
     const [dataChart, setDataChart] = React.useState<{ value: number; color: string }[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
     const [showDialog, setShowDialog] = React.useState<boolean>(false);
-    const idWellnessDay = route.params.id;
+    const healthData  = route.params.healthRecord;
 
     const handleDelete = () => {
-        if (idWellnessDay) {
-            const isDeleted = deleteWellnessDay(idWellnessDay);
+        if (healthData) {
+            const isDeleted = deleteWellnessDay(healthData._id);
             if (isDeleted) {
                 Alert.alert('Success', 'Wellness day deleted successfully');
                 navigation.goBack();
@@ -36,25 +35,14 @@ const DetailReport: React.FC<DetailReportProps> = ({ navigation, route }) => {
     }
 
     useEffect(() => {
-        const fetchWellnessData = async () => {
-            const fetch = await getWellnessDayById(idWellnessDay);
-            if (!fetch) {
-                Alert.alert('Error', 'No wellness data found for the selected date');
-                return;
-            }
-            setWellnessDay(fetch);
-        };
-        fetchWellnessData();
-    }, [idWellnessDay]);
-
-    useEffect(() => {
-        if (wellnessDay) {
+        if (healthData) {
+            const wellnessScore = healthData.wellnessIndex?.value || 0;
             setDataChart([
-                { value: wellnessDay.score ? parseInt(wellnessDay.score) : 0, color: '#4CAF50' },
-                { value: 10 - (wellnessDay.score ? parseInt(wellnessDay.score) : 0), color: 'lightgray' }
+                { value: wellnessScore, color: '#4CAF50' },
+                { value: 10 - wellnessScore, color: 'lightgray' }
             ]);
         }
-    }, [wellnessDay]);
+    }, [healthData]);
 
     return (
         <View style={styles.container}>
@@ -64,13 +52,14 @@ const DetailReport: React.FC<DetailReportProps> = ({ navigation, route }) => {
                 innerRadius={65}
                 data={dataChart}
                 centerLabelComponent={() => {
-                    return <Text style={{ fontSize: 20 }}>{wellnessDay?.score}/10</Text>;
+                    const wellnessScore = healthData?.wellnessIndex?.value || 0;
+                    return <Text style={{ fontSize: 20 }}>{wellnessScore}/10</Text>;
                 }}
             />
             <Text style={styles.titleTime}>
-                {wellnessDay?.timeStamp ? formatDateTime(wellnessDay.timeStamp) : ""}
+                {healthData.createdAt ? formatDateTime(healthData.createdAt) : ""}
             </Text>
-            {wellnessDay && <CardFourWellness wellnessDay={wellnessDay} />}
+            {healthData && <CardFourWellness health={healthData} />}
             <ButtonSubmit
                 title="Delete"
                 onPress={() => {

@@ -1,14 +1,17 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
-import { WellnessDay } from "../../models/wellness";
+// import { health } from "../../models/wellness";
 
 type CardFourWellnessProps = {
-    wellnessDay: WellnessDay;
+    health: any;
 };
 
-const CardFourWellness: React.FC<CardFourWellnessProps> = ({ wellnessDay }) => {
-        
+const CardFourWellness: React.FC<CardFourWellnessProps> = ({ health }) => {
+    useEffect(() => {
+        console.log("Health data received:", health);
+    }, [health]);
+    
     return (
         <View style={styles.cardContainer}>
             {/* Breathing Rate */}
@@ -18,8 +21,8 @@ const CardFourWellness: React.FC<CardFourWellnessProps> = ({ wellnessDay }) => {
                     <Text style={styles.info}>ℹ️</Text>
                 </View>
                 <Text style={styles.label}>Breathing Rate</Text>
-                <Text style={styles.value}>{wellnessDay.breathingRate.value}</Text>
-                <Text style={styles.unit}>{wellnessDay.breathingRate.unit}</Text>
+                <Text style={styles.value}>{health.respirationRate?.value || 'N/A'}</Text>
+                <Text style={styles.unit}>/minutes</Text>
             </View>
 
             {/* Heart Rate */}
@@ -29,8 +32,8 @@ const CardFourWellness: React.FC<CardFourWellnessProps> = ({ wellnessDay }) => {
                     <Text style={styles.info}>ℹ️</Text>
                 </View>
                 <Text style={styles.label}>Heart Rate</Text>
-                <Text style={styles.value}>{wellnessDay.heartRate.value}</Text>
-                <Text style={styles.unit}>{wellnessDay.heartRate.unit}</Text>
+                <Text style={styles.value}>{health.pulseRate?.value || 'N/A'}</Text>
+                <Text style={styles.unit}>bpm</Text>
             </View>
 
             {/* Stress Level */}
@@ -40,8 +43,8 @@ const CardFourWellness: React.FC<CardFourWellnessProps> = ({ wellnessDay }) => {
                     <Text style={styles.info}>ℹ️</Text>
                 </View>
                 <Text style={styles.label}>Stress Level</Text>
-                <Text style={styles.value}>{wellnessDay.stressLevel.value}</Text>
-                <Text style={styles.unit}>{wellnessDay.stressLevel.unit}</Text>
+                <Text style={styles.value}>{health.stressLevel?.value || 'N/A'}</Text>
+                <Text style={styles.unit}>Level</Text>
             </View>
 
             {/* Heart Rate Variability */}
@@ -51,8 +54,8 @@ const CardFourWellness: React.FC<CardFourWellnessProps> = ({ wellnessDay }) => {
                     <Text style={styles.info}>ℹ️</Text>
                 </View>
                 <Text style={styles.label}>Heart Rate Variability</Text>
-                <Text style={styles.value}>{wellnessDay.heartRateVariability.value}</Text>
-                <Text style={styles.unit}>{wellnessDay.heartRateVariability.unit}</Text>
+                <Text style={styles.value}>{health.meanRRi?.value || 'N/A'}</Text>
+                <Text style={styles.unit}>Milliseconds</Text>
             </View>
         </View>
     );
@@ -97,6 +100,12 @@ const styles = StyleSheet.create({
     unit: {
         fontSize: 12,
         color: "#888",
+    },
+    noDataText: {
+        fontSize: 16,
+        color: "#666",
+        textAlign: "center",
+        padding: 20,
     },
 });
 

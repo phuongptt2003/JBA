@@ -9,7 +9,7 @@ import { RootStackParamList } from "../../navigation/types";
 import { useDispatch } from "react-redux";
 import { logoutStore } from "../../store/slices/user-slice";
 import { useLanguage } from "../../contexts/language-context";
-import { logoutUser } from "../../api/user-api";
+import { logoutUser, switchEmailNotification } from "../../api/user-api";
 import { getToken } from "../../utils/token-storage";
 
 type AccountRouteProps = {
@@ -19,28 +19,47 @@ type AccountRouteProps = {
 const AccountRoute: React.FC<AccountRouteProps> = React.memo(({ user }) => {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
   const [showDialog, setShowDialog] = React.useState(false);
-    const { language, toggleLanguage, t } = useLanguage();
+  const { language, toggleLanguage, t } = useLanguage();
+  const { changeLanguage: changeLanguageApi } = require("../../api/user-api");
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   console.log("User data in AccountRoute:", user);
-  //   console.log("Name: ", user.username);
-  //   console.log("Email: ", user.email);
-  //   console.log("Phone: ", user.phone);
-  //   console.log("Weight: ", user.weight);
-  //   console.log("Height: ", user.height);
-  // }, [user]);
-
   const getLanguageText = () => {
     return language === "en" ? "English" : "Tiếng Việt";
   }
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     dispatch(logoutStore());
-    
+
     navigation.navigate('Login');
   }
+
+  const handleToggleNotification = async (value: boolean) => {
+    if (value) {
+      try {
+        setNotificationsEnabled(true);
+        const res = await switchEmailNotification();
+        const enabled = res?.isSubscription?.emailNotificationsEnabled ?? false;
+      } catch (error) {
+        console.error('Toggle notification error:', error);
+      }
+    } else {
+      setNotificationsEnabled(false);
+    }
+  };
+
+
+  const handleChangeLanguage = async () => {
+    const nextLanguage = language === 'en' ? 'vn' : 'en';
+    if (nextLanguage === 'vn') {
+      try {
+        await changeLanguageApi('vn');
+      } catch (error) {
+        console.error('Change language API error:', error);
+      }
+    }
+    toggleLanguage();
+  };
 
   return (
     <View style={styles.container}>
@@ -66,7 +85,7 @@ const AccountRoute: React.FC<AccountRouteProps> = React.memo(({ user }) => {
           <Text style={styles.itemText}>🔔 {t('notification')}</Text>
           <Switch
             value={notificationsEnabled}
-            onValueChange={setNotificationsEnabled}
+            onValueChange={handleToggleNotification}
           />
         </View>
 
@@ -78,7 +97,7 @@ const AccountRoute: React.FC<AccountRouteProps> = React.memo(({ user }) => {
           <Text style={styles.itemText}>📧 {t('contactUs')}</Text>
         </TouchableOpacity>
 
-       <TouchableOpacity style={styles.item} onPress={toggleLanguage}>
+        <TouchableOpacity style={styles.item} onPress={handleChangeLanguage}>
           <Text style={styles.itemText}>🌐 {t('changeLanguage')}</Text>
           <Text style={styles.languageText}>{language === 'en' ? t('english') : t('vietnamese')}</Text>
         </TouchableOpacity>

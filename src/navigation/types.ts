@@ -1,5 +1,5 @@
 import { User } from "../models/user";
-import { WellnessDay } from "../models/wellness";
+import { HealthRecord, WellnessDay } from "../models/wellness";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -9,7 +9,7 @@ export type RootStackParamList = {
   VerifyOTP: { email: string };
   ResetPassword: { email: string };
   ChangePassword: { email: string };
-  DetailReport: { id: string };
+  DetailReport: { healthRecord: HealthRecord };
   EditProfile: { user: User };
   DetailScanFace: undefined; 
 };

@@ -13,7 +13,7 @@ import { users } from '../../data/users';
 import { useDispatch } from 'react-redux';
 import Title from '../../components/ui/title';
 import { User } from '../../models/user';
-import { login, updateUser } from '../../store/slices/user-slice';
+import { loginStore, updateUserStore } from '../../store/slices/user-slice';
 import { changePassword, getOTP, loginUser, updatePassword, verifyOTP } from '../../api/user-api';
 
 type PropsVerifyOTP = NativeStackScreenProps<RootStackParamList, 'VerifyOTP'>;
@@ -141,7 +141,7 @@ export const ResetPasswordScreen: React.FC<PropsPasswordScreen> = ({ navigation,
                 // const userLogin = await loginUserMock(email, password)
                 if (userLogin) {
                     Alert.alert('Success', 'Password reset successfully. You are now logged in.');
-                    dispatch(login(userLogin));
+                    dispatch(loginStore(userLogin));
                     navigation.navigate('Home', { email });
                 } else {
                     Alert.alert('Error', 'Failed to login with new password');

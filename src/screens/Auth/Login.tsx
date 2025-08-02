@@ -20,19 +20,11 @@ export function LoginScreen(): React.JSX.Element {
   const dispatch = useDispatch();
 
   const handleClickLogin = async () => {
-    // if (!email || !password) {
-    //   Alert.alert('Error', 'Please enter both email and password');
-    //   return;
-    // }
-
-    // if (!isValidEmail(email)) {
-    //   Alert.alert('Error', 'Please enter a valid email address');
-    //   return;
-    // }
 
     try {
-      // const user = await loginUser(email, password, 'web-app-v1');
-      const user = await loginUser("phamphuong090203alele@gmail.com", "123456", 'web-app-v1');
+      const user = await loginUser("test@example.com", "StrongPassword123", 'web-app-v1');
+      // const user = await loginUser("phamphuong090203alele@gmail.com", "123456", 'web-app-v1');
+      // const user = await loginUser("ThinhNguyen", "123456", 'web-app-v1');
       if (!user) {
         Alert.alert('Error', 'Email or password is incorrect');
         return;
@@ -41,7 +33,7 @@ export function LoginScreen(): React.JSX.Element {
       dispatch(loginStore(user));
       
       console.log('Login successful:', user);
-      Alert.alert('Success', 'Login successful');
+      // Alert.alert('Success', 'Login successful');
       navigation.navigate('Home', { email });
       
     } catch (error) {

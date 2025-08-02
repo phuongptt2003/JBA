@@ -15,6 +15,7 @@ import { RootStackParamList } from "../../navigation/types";
 import { WellnessDay } from "../../models/wellness";
 import { getWellnessDays } from "../../api/wellness-api";
 import { formatDateTime } from "../../utils/validation";
+import { createHealthData } from "../../api/user-api";
 
 export const ScanRoute = () => {
   const device = useCameraDevice('back');
@@ -24,6 +25,8 @@ export const ScanRoute = () => {
   const [listWellness, setlistWellness] = React.useState<WellnessDay[]>([]);
   const [wellnessCurrent, setWellnessCurrent] = React.useState<WellnessDay>();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [addHealthData, setAddHealthData] = useState<any>({});
+  const [lastScanTime, setLastScanTime] = useState<string>('');
 
   useEffect(() => {
     console.log("Camera permission status:", hasPermission)
@@ -31,6 +34,12 @@ export const ScanRoute = () => {
       requestPermission();
     }
   }, [hasPermission, requestPermission]);
+
+  useEffect(() => {
+    if (addHealthData) {
+      console.log("New health useEffect:", addHealthData);
+    }
+  }, [addHealthData]);
 
   useEffect(() => {
     const fetchWellnessData = async () => {
@@ -54,6 +63,7 @@ export const ScanRoute = () => {
     }
   }, [listWellness]);
 
+
   const handleToggleCamera = async () => {
     try {
       console.log("Toggling camera, current state:", isCameraActive);
@@ -75,12 +85,20 @@ export const ScanRoute = () => {
       }
 
       setIsCameraActive(prev => !prev);
-
-      setTimeout(() => {
-        if (!isCameraActive) {
-          navigation.navigate('DetailScanFace');
+      setTimeout(async () => {
+        const healthDataString = '{"ascvdRisk": {"type": 33554432, "value": 1}, "bpValue": {"diastolic": 75, "systolic": 118}, "heartAge": {"type": 268435456, "value": 26}, "hemoglobin": {"type": 1048576, "value": 10.5}, "hemoglobinA1c": {"type": 2097152, "value": 5.64}, "highBloodPressureRisk": {"type": 16777216, "value": 1}, "highFastingGlucoseRisk": {"type": 8589934592, "value": 3}, "highHemoglobinA1cRisk": {"type": 8388608, "value": 1}, "highTotalCholesterolRisk": {"type": 536870912, "value": 3}, "lfhf": {"type": 524288, "value": 0.261}, "lowHemoglobinRisk": {"type": 17179869184, "value": 3}, "meanRRi": {"confidence": {"level": 2}, "type": 256, "value": 923}, "normalizedStressIndex": {"type": 67108864, "value": 15}, "oxygenSaturation": {"type": 4, "value": 97}, "pnsIndex": {"type": 8192, "value": 4.6}, "pnsZone": {"type": 16384, "value": 3}, "prq": {"confidence": {"level": 2}, "type": 4096, "value": 3.4}, "pulseRate": {"confidence": {"level": 3}, "type": 1, "value": 64}, "respirationRate": {"confidence": {"level": 2}, "type": 2, "value": 19}, "rmssd": {"type": 512, "value": 145}, "rri": {"confidence": {"level": 2}, "type": 32, "value": []}, "sd1": {"type": 1024, "value": 143}, "sd2": {"type": 2048, "value": 154}, "sdnn": {"confidence": {"level": 2}, "type": 8, "value": 148}, "snsIndex": {"type": 32768, "value": -1.1}, "snsZone": {"type": 65536, "value": 1}, "stressIndex": {"type": 128, "value": 22}, "stressLevel": {"type": 16, "value": 1}, "wellnessIndex": {"type": 131072, "value": 8}, "wellnessLevel": {"type": 262144, "value": 3}}'
+        const healthDataObject = JSON.parse(healthDataString);
+        const fetch = await createHealthData(healthDataString);
+        if (fetch) {
+          setAddHealthData(healthDataObject);
+          setLastScanTime(new Date().toISOString());
+        } else {
+          setError('Failed to create health data');
+          Alert.alert('Error', 'Failed to create health data');
+          return;
         }
-      }, 4000);
+        console.log("Health data created:", addHealthData);
+      }, 1000);
 
     } catch (err) {
       console.error('Camera toggle error:', err);
@@ -133,17 +151,20 @@ export const ScanRoute = () => {
           onPress={handleToggleCamera}
         />
         <View style={styles.textTaken}>
-          {wellnessCurrent ? (
+          {lastScanTime ? (
             <Text>
-              Last taken: <Text style={styles.boldText}>{formatDateTime(wellnessCurrent.timeStamp)}</Text>
+              Last taken: <Text style={styles.boldText}>{formatDateTime(lastScanTime)}</Text>
             </Text>
           ) : (
-            <Text>No wellness data available</Text>
+            ""
           )}
         </View>
+
         <View style={styles.cardsContainer}>
-          {wellnessCurrent && (
-            <CardFourWellness wellnessDay={wellnessCurrent} />
+          {addHealthData && Object.keys(addHealthData).length > 0 ? (
+            <CardFourWellness health={addHealthData} />
+          ) : (
+            <Text style={styles.noDataText}>No wellness data available.</Text>
           )}
         </View>
       </View>
@@ -222,5 +243,49 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: 'bold',
     color: '#333',
+  },
+  healthDataContainer: {
+    marginTop: 15,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 15,
+    marginHorizontal: 5,
+  },
+  healthDataTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  healthDataGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  healthDataItem: {
+    width: '48%',
+    backgroundColor: '#f8f9fa',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+    borderLeftWidth: 3,
+    borderLeftColor: '#007bff',
+  },
+  healthDataLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 5,
+  },
+  healthDataValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  noDataText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    padding: 20,
   },
 });
