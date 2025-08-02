@@ -20,6 +20,14 @@ export function LoginScreen(): React.JSX.Element {
   const dispatch = useDispatch();
 
   const handleClickLogin = async () => {
+    // if (!isValidEmail(email)) {
+    //   Alert.alert('Error', 'Invalid email format');
+    //   return;
+    // }
+    // if (!password) {
+    //   Alert.alert('Error', 'Please enter your password');
+    //   return;
+    // }
 
     try {
       const user = await loginUser("test@example.com", "StrongPassword123", 'web-app-v1');
